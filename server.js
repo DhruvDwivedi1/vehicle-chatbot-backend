@@ -12,20 +12,34 @@ const preferenceRoutes = require('./routes/preferences');
 
 const app = express();
 
-// CORS setup: allow requests from frontend
+// --- CORS setup ---
 const allowedOrigins = [
-  'http://localhost:3000',
-  'https://vehicle-chatbot-frontend.vercel.app', // Replace with your Vercel URL
+  'http://localhost:3000', // local dev
+  'https://vehicle-chatbot-frontend.vercel.app', // production frontend
 ];
 
 app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
+  origin: function(origin, callback){
+    // allow requests with no origin (like Postman)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
 }));
 
 // Body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Simple request logger
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -41,8 +55,8 @@ app.get('/api/health', (req, res) => {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
+  console.error('Error:', err.message);
+  res.status(500).json({ message: err.message || 'Something went wrong!' });
 });
 
 // Start server
