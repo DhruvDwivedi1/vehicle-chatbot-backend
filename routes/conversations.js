@@ -232,16 +232,16 @@ async function generateBotResponse(userMessage, userId, vehicleIds = null) {
   // Handle comparison request
   if (lowerMessage.includes('compare') || lowerMessage.includes('comparison')) {
     try {
-      // console.log('=== COMPARISON REQUEST ===');
-      // console.log('User message:', userMessage);
-      // console.log('Vehicle IDs provided:', vehicleIds);
+      console.log('=== COMPARISON REQUEST ===');
+      console.log('User message:', userMessage);
+      console.log('Vehicle IDs provided:', vehicleIds);
       
       const carNames = ['creta', 'nexon', 'city', 'swift', 'baleno', 'venue', 'seltos', 'scorpio', 
                         'fortuner', 'innova', 'punch', 'brezza', 'verna', 'amaze', 'harrier', 
                         'safari', 'xuv', 'thar', 'sonet', 'carens', 'ertiga'];
       
       const mentionedCars = carNames.filter(name => lowerMessage.includes(name));
-      // console.log('Mentioned car names:', mentionedCars);
+      console.log('Mentioned car names:', mentionedCars);
       
       if (mentionedCars.length >= 2) {
         const likeConditions = mentionedCars.map(() => '(LOWER(model) LIKE ? OR LOWER(make) LIKE ?)').join(' OR ');

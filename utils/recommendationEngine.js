@@ -1,3 +1,4 @@
+// ============================================
 function scoreVehicle(vehicle, preferences) {
   let score = 0;
 
